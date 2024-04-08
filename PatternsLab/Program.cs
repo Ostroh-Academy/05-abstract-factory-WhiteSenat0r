@@ -1,74 +1,115 @@
-﻿namespace PatternsLab;
-
-// Abstract Product Interfaces
-interface IButton
+﻿// Abstract Product: Menu
+interface IMenu
 {
-    void Paint();
+    void DisplayMenu();
 }
 
-interface ITextBox
+// Concrete Products: Fast Food Menu
+class FastFoodMenu : IMenu
 {
-    void Paint();
+    public void DisplayMenu()
+    {
+        Console.WriteLine("Fast Food Menu:");
+        Console.WriteLine("- Burger");
+        Console.WriteLine("- Fries");
+        Console.WriteLine("- Soft Drink");
+    }
 }
 
-// Concrete Products
-class WinButton : IButton
+// Concrete Products: Gourmet Menu
+class GourmetMenu : IMenu
 {
-    public void Paint() => Console.WriteLine("Windows style button");
+    public void DisplayMenu()
+    {
+        Console.WriteLine("Gourmet Menu:");
+        Console.WriteLine("- Filet Mignon");
+        Console.WriteLine("- Truffle Risotto");
+        Console.WriteLine("- Creme Brulee");
+    }
 }
 
-class WinTextBox : ITextBox
+// Abstract Product: Interior
+interface IInterior
 {
-    public void Paint() => Console.WriteLine("Windows style text box");
+    void DesignInterior();
 }
 
-class MacButton : IButton
+// Concrete Products: Fast Food Interior
+class FastFoodInterior : IInterior
 {
-    public void Paint() => Console.WriteLine("Mac style button");
+    public void DesignInterior()
+    {
+        Console.WriteLine("Fast Food Interior: Bright colors, plastic chairs, and tables.");
+    }
 }
 
-class MacTextBox : ITextBox
+// Concrete Products: Gourmet Interior
+class GourmetInterior : IInterior
 {
-    public void Paint() => Console.WriteLine("Mac style text box");
+    public void DesignInterior()
+    {
+        Console.WriteLine("Gourmet Interior: Elegant decor, soft lighting, and comfortable seating.");
+    }
 }
 
-// Abstract Factory Interface
-interface IGUIFactory
+// Abstract Factory: Restaurant Factory
+interface IRestaurantFactory
 {
-    IButton CreateButton();
-    ITextBox CreateTextBox();
+    IMenu CreateMenu();
+    IInterior DesignInterior();
 }
 
-// Concrete Factories
-class WinFactory : IGUIFactory
+// Concrete Factory: Fast Food Restaurant Factory
+class FastFoodRestaurantFactory : IRestaurantFactory
 {
-    public IButton CreateButton() => new WinButton();
+    public IMenu CreateMenu()
+    {
+        return new FastFoodMenu();
+    }
 
-    public ITextBox CreateTextBox() => new WinTextBox();
+    public IInterior DesignInterior()
+    {
+        return new FastFoodInterior();
+    }
 }
 
-class MacFactory : IGUIFactory
+// Concrete Factory: Gourmet Restaurant Factory
+class GourmetRestaurantFactory : IRestaurantFactory
 {
-    public IButton CreateButton() => new MacButton();
+    public IMenu CreateMenu()
+    {
+        return new GourmetMenu();
+    }
 
-    public ITextBox CreateTextBox() => new MacTextBox();
+    public IInterior DesignInterior()
+    {
+        return new GourmetInterior();
+    }
 }
 
-// Usage
+// Client
 class Program
 {
     static void Main(string[] args)
     {
-        IGUIFactory factory = new WinFactory();
-        IButton button = factory.CreateButton();
-        ITextBox textBox = factory.CreateTextBox();
-        button.Paint(); // Output: Windows style button
-        textBox.Paint(); // Output: Windows style text box
+        // Creating a fast food restaurant
+        IRestaurantFactory fastFoodFactory = new FastFoodRestaurantFactory();
+        IMenu fastFoodMenu = fastFoodFactory.CreateMenu();
+        IInterior fastFoodInterior = fastFoodFactory.DesignInterior();
 
-        factory = new MacFactory();
-        button = factory.CreateButton();
-        textBox = factory.CreateTextBox();
-        button.Paint(); // Output: Mac style button
-        textBox.Paint(); // Output: Mac style text box
+        Console.WriteLine("Creating a Fast Food Restaurant:");
+        fastFoodMenu.DisplayMenu();
+        fastFoodInterior.DesignInterior();
+        
+        Console.WriteLine();
+
+        // Creating a gourmet restaurant
+        IRestaurantFactory gourmetFactory = new GourmetRestaurantFactory();
+        IMenu gourmetMenu = gourmetFactory.CreateMenu();
+        IInterior gourmetInterior = gourmetFactory.DesignInterior();
+
+        Console.WriteLine("Creating a Gourmet Restaurant:");
+        gourmetMenu.DisplayMenu();
+        gourmetInterior.DesignInterior();
     }
 }
